@@ -17,4 +17,4 @@ To accomplish this, we have to follow these steps:
 
 ### Provision the AWS Environment 
 
-You can use this [CF template](https://github.com/hsiddhu2/learn-aws-labs/blob/main/Simple/Sticky%20Sessions/setup/ALB_Stickiness.yaml) to provision the environment 
+You can use this <a href="https://github.com/hsiddhu2/learn-aws-labs/blob/main/Simple/Sticky%20Sessions/setup/ALB_Stickiness.yaml" target="_blank">CF template</a> to provision the environment. 
