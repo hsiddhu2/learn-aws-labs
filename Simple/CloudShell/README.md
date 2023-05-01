@@ -1,7 +1,7 @@
 **List IAM Users in Account**
 - `aws iam list-users`
   
-![picture 1](../../../images/49c55dcd334a5f58a5dd337cb4727ba66c43c93c0081f516ea268c5fa2fbe683.png)  
+![alt text]([http://url/to/img.png](https://github.com/hsiddhu2/learn-aws-labs/blob/main/Simple/CloudShell/images/image1.jpeg)
 
 **Create S3 Bucket**
 - `aws s3api create-bucket --bucket hpcloudlabs --region us-east-1`
