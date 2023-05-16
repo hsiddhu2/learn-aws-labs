@@ -182,9 +182,29 @@ aws s3api put-object --bucket dva-test-bucket --key item1.json --profile dva-tes
 
 # Lab 2 - MFA with Amazon S3
 
+## S3 Multi-Factor Authentication Delete (MFA Delete)
+
+1. To enable MFA Delete, the bucket should have versioning enabled. 
+2. MFA delete adds requirement for the following operations - 
+    - Changing the versioning state of the bucket. 
+    - Permanently delete the objects in the bucket
+3. `x-amx-mfa` header must be included in the header request of API actions. 
+
+4. Versioning can be enabled by - 
+    - Bucket Owner
+    - AWS Account that create the bucket
+    - Root user
+
+5. MFA Delete cna be enabled by - 
+    - Only the root user 
+
+
+
 ## 1. Enable versioning
 
-aws s3api put-bucket-versioning --bucket bootcamp-s3-exercises --versioning-configuration Status=Enabled
+```
+aws s3api put-bucket-versioning --bucket dva-test-bucket --versioning-configuration Status=Enabled
+```
 
 ## 2. Configure Access Keys 
 Login as root and create access keys. Ensure you have an MFA device setup for root and make note of the ARN. Configure the access keys on the AWS CLI (not CloudShell)
