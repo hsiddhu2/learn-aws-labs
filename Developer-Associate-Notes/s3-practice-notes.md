@@ -147,8 +147,13 @@ aws s3api get-bucket-policy --bucket dva-test-bucket
 ```
 
 10. Upload the object again
-```json
+
+```
 aws s3api put-object --bucket dva-test-bucket --key item1.json --profile dva-test-user
+```
+**Output:**
+```json
+
 {
     "ETag": "\"d41d8cd98f00b204e9800998ecf8427e\"",
     "ServerSideEncryption": "AES256"
