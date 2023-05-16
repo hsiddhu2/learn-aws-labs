@@ -160,3 +160,160 @@ aws s3api put-object --bucket dva-test-bucket --key item1.json --profile dva-tes
 }
 ```
 
+10. Make the object public using an object-level ACL
+
+---
+# Questions 
+
+1. Which settings must be changed?
+    - Need to enable bucket ACLs in the bucket ownership under permission tab. 
+    - Uncheck the "block public access' setting in permission tab.
+    - Open bucket and select the object and go to actions and click on "make public" 
+
+
+
+2. Does the bucket policy need updating?
+    - No, after enabling bucket ACLs bucket policy will not in effect and objects will be publicly accessible. 
+
+4. After getting it working, what happens if you enable "block public access"?
+    - The objects will become private again and will not be available publicly. 
+
+---
+
+# Lab 2 - MFA with Amazon S3
+
+## 1. Enable versioning
+
+aws s3api put-bucket-versioning --bucket bootcamp-s3-exercises --versioning-configuration Status=Enabled
+
+## 2. Configure Access Keys 
+Login as root and create access keys. Ensure you have an MFA device setup for root and make note of the ARN. Configure the access keys on the AWS CLI (not CloudShell)
+
+## 3. Enable MFA delete
+From the CLI, not from CloudShell (update the ARN and replace TOKEN_CODE with a valid code)
+
+```
+aws s3api put-bucket-versioning --bucket my-bucket --versioning-configuration Status=Enabled,MFADelete=Enabled --mfa "arn:aws:iam::<account-id>:mfa/root-account-mfa-device <TOKEN_CODE>"
+```
+
+## 4. Upload and and then attempt to delete an object
+
+```
+echo "Test MFA Delete" > test.txt
+aws s3 cp test.txt s3://bootcamp-s3-exercises/test.txt
+
+```
+```
+aws s3 rm s3://bootcamp-s3-exercises/test.txt
+aws s3api delete-object --bucket bootcamp-s3-exercises --key test.txt --version-id <version-id-of-deleted-object>
+```
+## 5. Delete the object with MFA
+
+```
+aws s3api delete-object --bucket bootcamp-s3-exercises --key test.txt --version-id <version-id-of-deleted-object> --mfa "arn:aws:iam::ACCOUNT_ID:mfa/root-account-mfa-device TOKEN_CODE"
+```
+
+---
+
+# Lab 3 -  MFA-Protected API Access
+
+## 1. Create a bucket
+
+```
+aws s3api create-bucket --bucket bootcamp-s3-mfa-test --region us-east-1
+```
+
+## 2. Update bucket policy 
+With the test use ARN and bucket ARNs and save as `mfa_bucket_policy.json`
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Deny",
+            "Principal": {
+                "AWS": "arn:aws:iam::ACCOUNT-ID:user/dva-test-user"
+            },
+            "Action": [
+                "s3:ListBucket",
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dva-s3-mfa-test",
+                "arn:aws:s3:::dva-s3-mfa-test/*"
+            ],
+            "Condition": {
+                "Null": {
+                    "aws:MultiFactorAuthAge": "true"
+                }
+            }
+        }
+    ]
+}
+```
+
+## 3. Apply the bucket policy
+
+```
+aws s3api put-bucket-policy --bucket bootcamp-s3-mfa-test --policy file://mfa_bucket_policy.json
+```
+
+## 4. Attempt to upload 
+Upload a file from the AWS CLI (not CloudShell) using the same account specified in the principal element (should fail)
+
+## 5. Get temporary session credentials with MFA
+
+```
+aws sts get-session-token --serial-number arn:aws:iam::ACCOUNT_ID:mfa/DEVICE_NAME --token-code <token>
+```
+## 6. Then create the environment variables
+
+```
+export AWS_ACCESS_KEY_ID=TEMP_ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=TEMP_SECRET_ACCESS_KEY
+export AWS_SESSION_TOKEN=TEMP_SESSION_TOKEN
+```
+## 7. Attempt to upload
+Upload a file from the AWS CLI again, without specifying your profile (should work)
+
+---
+
+# Lab 4 - Enforce Encryption with AWS KMS
+
+## 1. Update the bucket policy json file to enforce encryption with AWS KMS
+
+```json
+{
+    "Version": "2012-10-17",
+    "Id": "PutObjectPolicy",
+    "Statement": [
+        {
+            "Sid": "DenyUnEncryptedObjectUploads",
+            "Effect": "Deny",
+            "Principal": "*",
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::dva-s3-mfa-test/*",
+            "Condition": {
+                "StringNotEquals": {
+                    "s3:x-amz-server-side-encryption": "aws:kms"
+                }
+            }
+        }
+    ]
+}
+```
+
+## 2. Update the bucket policy
+
+```
+aws s3api put-bucket-policy --bucket bootcamp-s3-mfa-test --policy file://mfa_bucket_policy.json
+```
+## 3. Test uploading 
+Upload a file with default encryption settings (should fail)
+
+## 4. Specify SSE using aws-kms
+Try again specifying server-side encryption with AWS KMS (should work)
+
