@@ -1,0 +1,29 @@
+UserData:
+  Fn::Base64: !Sub |
+    #!/bin/bash -xe
+    exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+    sudo yum update -y
+    sudo yum install pip -y
+    sudo yum install -y python3
+    sudo pip3 install flask mysql-connector-python
+    cat <<EOF > /home/ec2-user/app.py
+    from flask import Flask
+    import mysql.connector
+    app = Flask(__name__)
+    @app.route("/")
+    def hello():
+        conn = mysql.connector.connect(user='admin', password='secret123', host='${MyDBInstance.Endpoint.Address}', database='MyDatabase')
+        cursor = conn.cursor()
+        cursor.execute("CREATE TABLE IF NOT EXISTS messages (content VARCHAR(255))")
+        cursor.execute("INSERT INTO messages (content) VALUES ('Hello, world!')")
+        conn.commit()
+        cursor.execute("SELECT content FROM messages")
+        row = cursor.fetchone()
+        if row is None:
+            return "No messages in database"
+        else:
+            return "Message from database: " + row[0]
+    if __name__ == "__main__":
+        app.run(host='0.0.0.0', port=80)
+    EOF
+    sudo python3 /home/ec2-user/app.py &
