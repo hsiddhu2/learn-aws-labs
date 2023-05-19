@@ -314,7 +314,7 @@ Resources:
           EOF
           sudo python3 /home/ec2-user/app.py &
           
-outputs:
+Outputs:
   MyEC2Instance:
     Description: The public IP address of the newly created EC2 instance
     Value: !GetAtt MyEC2Instance.PublicIp
