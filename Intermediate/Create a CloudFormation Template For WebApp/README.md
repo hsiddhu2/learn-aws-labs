@@ -4,6 +4,7 @@
 
 *The goal of this AWS lab is to create a CloudFormation stack template to automates the deployment of a web application on AWS.*
 
+![Requirement Architecture](Architecture.png)
 
 ## Instructions:
 

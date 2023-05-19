@@ -253,6 +253,7 @@ Resources:
       DBSubnetGroupName: !Ref myRDSDBSubnetGroup
       DBSecurityGroups:
         - !Ref myRDSDBSecurityGroup
+      AvailabilityZone: !Select [ 1, !GetAZs '' ]
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}-DBInstance
