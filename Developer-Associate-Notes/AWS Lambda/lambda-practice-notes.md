@@ -37,10 +37,8 @@ aws iam create-role --role-name hp-lambda-role --assume-role-policy-document fil
 
 ```bash
 aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-
-
-arn:aws:iam::075260000351:policy/CreateS3Bucket
-arn:aws:iam::075260000351:policy/GetDeleteS3Object
+aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::075260000351:policy/CreateS3Bucket
+aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::075260000351:policy/GetDeleteS3Object
 ```
 5. Create a lambda function using CLI using the below command. 
 
