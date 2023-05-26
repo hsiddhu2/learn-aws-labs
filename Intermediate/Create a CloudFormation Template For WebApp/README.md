@@ -50,6 +50,10 @@ This user data installs a web server and python dependencies and then runs a sim
 **Second Solution** This is with 1 public and 1 private subnet. 
     [here](2nd_Solution.yml)
 
+**Solution Evolution** This is using 2 public and 2 private subnet. A good solution which later can be expanded with a standup-DB instance and a read replica. EC2 Auto scaling group, Elastic load balancer can be added to make the app highly availalbe, scalable and efficient. To add more security, we can tighten up the EC2 security group, add Network ACL's, WAF. 
+
+![Architecuture to Evolve](3rd_Solution.png)
+
 After deployment, the web application can be accessed at the public IP address of the EC2 instance. The public IP address can be found in the Outputs section of the CloudFormation stack.
 
 ![OUTPUT](output.png)
