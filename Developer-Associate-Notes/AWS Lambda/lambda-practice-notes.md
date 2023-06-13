@@ -37,8 +37,8 @@ aws iam create-role --role-name hp-lambda-role --assume-role-policy-document fil
 
 ```bash
 aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::075260000351:policy/CreateS3Bucket
-aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::075260000351:policy/GetDeleteS3Object
+aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::ACCOUNT-NO:policy/CreateS3Bucket
+aws iam attach-policy --role hp-lambda-role --policy-arn arn:aws:iam::ACCOUNT-NO:policy/GetDeleteS3Object
 ```
 5. Create a lambda function using CLI using the below command. 
 
@@ -58,4 +58,62 @@ aws lambda invoke --function-name hp-lambda-function --payload '{"message":"Hell
 
 ```bash
 cat output.txt
+```
+
+8. Update the code in lambda_function.py and zip the file again. 
+
+```bash
+zip lambda_function.zip lambda_function.py
+```
+
+```bash
+aws lambda update-function-code --function-name hp-lambda-function --zip-file fileb://lambda_function.zip
+
+
+
+# Lab 2 - Working with Environment Variables and Secrets in AWS Lambda
+
+1. Create a secret json file and add your secrets. (secrets.json)
+
+```json
+{
+    "username": "admin",
+    "password": "admin123"
+}
+```
+
+2. Create a secret in AWS Secrets Manager using CLI. 
+
+```bash
+aws secretsmanager create-secret --name hp-secret --description "HP Secret" --secret-string file://secrets.json
+```
+
+3, Create a lambda function using the below code. 
+
+```python
+
+import os
+import boto3
+import json
+
+def lambda_handler(event, context):
+    secret_name = os.environ['SECRET_NAME']
+    region_name = os.environ['AWS_REGION']
+
+    session = boto3.session.Session()
+    client = session.client(service_name='secretsmanager', region_name=region_name)
+    response = client.get_secret_value(SecretId=secret_name)
+
+    secret_data = json.loads(response['SecretString'])
+    api_key = secret_data['username']
+
+    # Use the API key to make a request to the hypothetical API
+    # (Replace with actual API request code)
+    print(f"API key: {api_key}")
+
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }
+
 ```
