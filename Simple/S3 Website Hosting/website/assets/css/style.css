@@ -1,0 +1,97 @@
+/* style.css */
+
+/* In your style.css */
+body {
+  font-family: 'Noto Serif', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.bgimg {
+  background-image: url('assets/css/background.jpeg');
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  color: black;
+  font-size: 25px;
+}
+
+.topleft {
+  position: absolute;
+  top: 0;
+  left: 16px;
+}
+
+.bottomleft {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  color: black;
+}
+
+.middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+hr {
+  margin: auto;
+  width: 40%;
+}
+
+a { 
+  color: white; 
+}
+
+/* sticky-header.css */
+
+/* Style for the sticky header */
+.sticky-header {
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+} 
+
+.sticky-header nav, .topleft {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60px;
+}
+
+.sticky-header ul {
+  list-style: none;
+  display: flex;
+}
+
+.sticky-header li {
+  margin: 0 15px;
+}
+
+.sticky-header a {
+  text-decoration: none;
+  color: white;
+}
+
+/* Add padding to the content to prevent it from being covered by the sticky header */
+.bgimg {
+  padding-top: 80px; /* Adjust this value according to the header's height */
+}
+
+
+
+

@@ -1,0 +1,53 @@
+/* Reset default margin and padding for the entire page */
+body, h1, h2, h3, p, ul, li {
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Style for the blog posts section */
+  .blog-posts {
+    text-align: center;
+    padding: 50px;
+  }
+  
+  .blog-posts h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  /* Style for the blog post grid */
+  .post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  /* Style for individual blog post link */
+  .post {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .post a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .post-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    padding: 0%;
+  }
+  
+  .post-details h3 {
+    margin: 10px 0;
+    color: black;
+  }
+  
+  .post-details p {
+    font-style: italic;
+  }
+  
